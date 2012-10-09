@@ -67,7 +67,7 @@ if __name__ == '__main__':
         print 'Usage:\n{0} $filename $color\n'.format(argv[0])
         print 'Where color is one of:'
         print ', '.join(colors)
-        print '\nOr just {0}'.format(argv[0]) 
+        print '\nOr just {0} $filename to find out what colour a file is.'.format(argv[0]) 
     elif len(argv) == 2:
         try:
             print get(argv[1])
