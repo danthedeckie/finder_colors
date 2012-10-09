@@ -1,5 +1,5 @@
 #!/usr/bin/python
-""" display_color.py - Setting colours of files/folders from the commandline.
+""" display_colors.py - Setting colours of files/folders from the commandline.
 
 Copyright (c) 2012 Daniel Fairhead <danthedeckie on github>
 

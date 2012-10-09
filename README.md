@@ -4,10 +4,10 @@ Set the colors of files and folders for OSX Finder from the commandline.
 
 Usage:
 
-``` folder_colors.py $filename ```
+``` display_colors.py $filename ```
 Returns the folder color.
 
-``` folder_colors.py $filename $color ```
+``` display_colors.py $filename $color ```
 Sets the color.
 
 Options for colors are:
@@ -15,7 +15,7 @@ Options for colors are:
 
 Installing:
 
-Copy the folder_colors.py to somewhere in your $PATH
+Copy the display_colors.py to somewhere in your $PATH
 (usually /usr/local/bin works...) and run
 
 ``` chmod +x /usr/local/bin/display_colors.py ```
