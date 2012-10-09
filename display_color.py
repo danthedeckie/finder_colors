@@ -1,5 +1,5 @@
 #!/usr/bin/python
-""" folder_colors.py - Setting colours of folders from the commandline.
+""" display_color.py - Setting colours of files/folders from the commandline.
 
 Copyright (c) 2012 Daniel Fairhead <danthedeckie on github>
 
@@ -25,10 +25,10 @@ THE SOFTWARE.
 
 Usage:
 
->>> folder_colors.py $filename
+>>> display_colors.py $filename
 outputs which colour it's been set to.
 
->>> folder_colors.py $filename $color
+>>> display_colors.py $filename $color
 sets the color.
 
 """
