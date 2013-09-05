@@ -45,10 +45,14 @@ names  = {0: 'none', 2: 'gray', 4: 'green', 6: 'purple', \
 blank = 32*chr(0)
 
 def get(filename):
-    attrs = xattr(filename)
-    if FinderInfo in attrs:
-        return names[ord(attrs.get(FinderInfo)[9])]
-    else:
+    try:
+        attrs = xattr(filename)
+        color_num = ord(attrs.get(FinderInfo)[9])
+        if color_num > 14:
+            color_num -= 16
+        return names[color_num]
+
+    except Exception:
         return names[0]
 
 def set(filename, color=0):
