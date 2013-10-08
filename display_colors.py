@@ -34,6 +34,7 @@ sets the color.
 """
 from xattr import xattr
 from sys import argv, stderr
+from os.path import exists
 
 FinderInfo = u'com.apple.FinderInfo'
 
@@ -67,24 +68,37 @@ def set(filename, color=0):
     return new
 
 if __name__ == '__main__':
-    if len(argv) == 1:
+    argc = len(argv) # why calculate it multiple times?
+
+    if argc == 1:
         print 'Usage:\n{0} $filename $color\n'.format(argv[0])
         print 'Where color is one of:'
         print ', '.join(colors)
         print '\nOr just {0} $filename to find out what colour a file is.'.format(argv[0]) 
-    elif len(argv) == 2:
+    elif argc == 2:
         try:
             print get(argv[1])
         except Exception as e:
             stderr.write(str(e))
             exit(e.errno)
-    elif len(argv) == 3:
+    elif argc == 3:
         try:
             set(argv[1], argv[2])
         except KeyError as e:
-            stderr.write('Invalid color: {0}\n'.format(str(e)))
-            stderr.write('Try one of:\n {0}\n'.format(', '.join(colors)))
-            exit(1)
+            if exists(argv[2]):
+                print '\t'.join([argv[1], get(argv[1])])
+                print '\t'.join([argv[2], get(argv[2])])
+            else:
+                stderr.write('Invalid color: {0}\n'.format(str(e)))
+                stderr.write('Try one of:\n {0}\n'.format(', '.join(colors)))
+                exit(1)
         except Exception as e:
             stderr.write(str(e))
             exit(e.errno)
+    else:
+        if argv[-1] in colors:
+            for filename in argv[1:-1]:
+                set(filename,argv[-1])
+        else:
+            for filename in argv[1:]:
+                print '\t'.join([filename,get(filename)])
