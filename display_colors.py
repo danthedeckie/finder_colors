@@ -1,22 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Usage:
-  display_colors.py [options] <file>...
-  display_colors.py -h, --help
-  display_colors.py --version
+""" display_colors.py - Setting colours of files/folders from the commandline.
 
-Options:
--c, --color=<color>     Set color. Valid values are: none, gray, green, 
-                        purple, blue, yellow, red, orange.
-
-Set colours of files/folders from the commandline.
-Without "-c" or "--color", the script prints the color of each file.
-If -c is set, the script sets the color of each file to <color>
-"""
-
-"""
 Copyright (c) 2012 Daniel Fairhead <danthedeckie on github>
+--------
+Contributors:
+ - Panayotis Vryonis <vrypan on github>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -36,57 +25,131 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+------------------
+
+Usage:
+
+$display_colors.py <filename>
+
+outputs which colour it's been set to.
+
+$display_colors.py <color> <filename>
+
+sets the color.
+
+------------------
+
+You can also include this as a python module, and use the two functions:
+
+set(filename, color)
+
+and
+
+get(filename)
+
+which work pretty much as you'd expect.
+
 """
-from docopt import docopt
+
+from __future__ import print_function
 from xattr import xattr
 from sys import argv, stderr
-from os.path import exists
 
-__version__ = 1.0
+__version__ = 0.9
 
-FinderInfo = u'com.apple.FinderInfo'
+_FINDER_INFO_TAG = u'com.apple.FinderInfo'
 
-colors = {'none': 0, 'gray': 2, 'green': 4, 'purple': 6, 
+COLORS = {'none': 0, 'gray': 2, 'green': 4, 'purple': 6, 
           'blue': 8, 'yellow': 10, 'red': 12, 'orange': 14}
-names  = {0: 'none', 2: 'gray', 4: 'green', 6: 'purple', 
+NAMES  = {0: 'none', 2: 'gray', 4: 'green', 6: 'purple', 
           8: 'blue', 10 : 'yellow', 12 : 'red', 14 : 'orange' }
 
-blank = 32*chr(0)
+BLANK = 32*chr(0)
 
 def get(filename):
+    ''' Get OSX Finder Color (extended attribute) of path (file or folder) '''
+
     try:
         attrs = xattr(filename)
-        color_num = ord(attrs.get(FinderInfo)[9]) & 14 
+        color_num = ord(attrs.get(_FINDER_INFO_TAG)[9]) & 14 
         # & 14 to mask with "1110" (ie ignore all other bits).
-        return names[color_num]
-    except Exception:
-        return names[0]
+        return NAMES[color_num]
 
-def set(filename, color):
+    except IOError as err:
+        if err.errno == 93: # attribute not found...
+            return NAMES[0]
+        # else
+        raise err
+
+def set(filename, color): # pylint: disable=W0622
+    ''' Set OSX Finder Color (extended attribute) of path (file or folder) '''
+
     attrs = xattr(filename)
-    if FinderInfo in attrs:
-        previous = attrs[FinderInfo]
+    if _FINDER_INFO_TAG in attrs:
+        previous = attrs[_FINDER_INFO_TAG]
     else:
-        previous = blank
+        previous = BLANK
+
     prev_color_extra_bits = ord(previous[9]) & (255-14)
+
     # these are all the bits in previous[9] not used for color.
-    new = previous[:9] + chr(colors[color] + prev_color_extra_bits) + previous[10:]
-    attrs.set(FinderInfo, new)
+    new = previous[:9] \
+        + chr(COLORS[color] \
+        + prev_color_extra_bits) \
+        + previous[10:]
+
+    attrs.set(_FINDER_INFO_TAG, new)
     return new
 
-if __name__ == '__main__':
-    args = docopt(__doc__, version=__version__)
-    color = args['--color']
 
-    if color:
-        if color not in colors:
-            print __doc__
+###############################################################################
+# If this is used as a stand-alone script:
+
+if __name__ == '__main__':
+
+    def display(pathname):
+        ''' display filename\tcolor '''
+        print(pathname, get(pathname), sep='\t')
+
+    def usage(): # pylint: disable=C0111
+        print ('Usage:\n\n'
+               '{0} <filename(s)>\n\n'
+               'to find out what colour a file is.\n'
+               'Output format is <filename><TAB><color><NEWLINE>\n\n'
+               'or\n\n'
+               '{0} [color] <filename(s)>\n\n'
+               'to set the color of those file(s).\n\n'
+               'Possible colors are:'.format(argv[0]))
+        print (*COLORS, sep=', ') # pylint: disable=W0142
+
+
+    try:
+
+        if len(argv) == 1: # No arguments, so display a usage message.
+            usage()
+        elif len(argv) == 2: # One argument, so presumably a file.
+            display(argv[1])
+
+        else: # At least 2 arguments...
+
+            # If there are more args, then the last one *could* be a color,
+            # in which case, set all preceding mentioned files to that color.
+            # Otherwise, if it's a pathname, then display it and all the
+            # other paths and their colors:
+
+            if argv[1] in COLORS:
+                for fn in argv[2:]:
+                    set(fn, argv[1])
+
+                    display(fn)
+            else:
+                for f in argv[1:]:
+                    display(f)
+
+    except Exception as err: # pylint: disable=W0703
+        print(err, file=stderr)
+
+        if hasattr(err,'errno') and err.errno != 0:
+            exit(err.errno)
         else:
-            for filename in args['<file>']:
-                set(filename, color)
-    else:
-        if len(args['<file>']) == 1:
-            print get(args['<file>'][0])
-        else:
-            for filename in args['<file>']:
-                    print '\t'.join([filename,get(filename)])
+            exit(1)
