@@ -13,6 +13,7 @@ setup(
     url = 'https://github.com/danthedeckie/finder_colors',
     download_url = 'https://github.com/danthedeckie/finder_colors/tarball/' + __version__,
     keywords = ['OSX', 'OS X', 'Finder', 'Colors', 'Utility', 'Colours'],
+    install_requires = ['xattr', ],
     classifiers = ['Development Status :: 4 - Beta',
                    'License :: OSI Approved :: MIT License',
                    'Intended Audience :: Developers',
