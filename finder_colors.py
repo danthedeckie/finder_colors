@@ -55,7 +55,7 @@ from __future__ import print_function
 from xattr import xattr
 from sys import argv, stderr
 
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 
 _FINDER_INFO_TAG = u'com.apple.FinderInfo'
 
@@ -80,6 +80,8 @@ def get(filename):
             return NAMES[0]
         # else
         raise err
+    except KeyError as err:
+        return NAMES[0]
 
 def set(filename, color): # pylint: disable=W0622
     ''' Set OSX Finder Color (extended attribute) of path (file or folder) '''
