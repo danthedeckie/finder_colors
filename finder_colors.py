@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-""" display_colors.py - Setting colours of files/folders from the commandline.
+""" finder_colors.py - Setting colours of files/folders from the commandline.
 
-Copyright (c) 2012 Daniel Fairhead <danthedeckie on github>
+Copyright (c) 2013 Daniel Fairhead <danthedeckie on github>
 --------
 Contributors:
  - Panayotis Vryonis <vrypan on github>
@@ -29,11 +29,11 @@ THE SOFTWARE.
 
 Usage:
 
-$display_colors.py <filename>
+$finder_colors.py <filename>
 
 outputs which colour it's been set to.
 
-$display_colors.py <color> <filename>
+$finder_colors.py <color> <filename>
 
 sets the color.
 
@@ -55,7 +55,7 @@ from __future__ import print_function
 from xattr import xattr
 from sys import argv, stderr
 
-__version__ = 0.9
+__version__ = '0.9.2'
 
 _FINDER_INFO_TAG = u'com.apple.FinderInfo'
 
