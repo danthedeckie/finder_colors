@@ -52,10 +52,9 @@ which work pretty much as you'd expect.
 """
 
 from __future__ import print_function
-from xattr import xattr
 from sys import argv, stderr
-
 __version__ = '0.9.3'
+
 
 _FINDER_INFO_TAG = u'com.apple.FinderInfo'
 
@@ -108,6 +107,7 @@ def set(filename, color): # pylint: disable=W0622
 # If this is used as a stand-alone script:
 
 if __name__ == '__main__':
+    from xattr import xattr
 
     def display(pathname):
         ''' display filename\tcolor '''
