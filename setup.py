@@ -1,5 +1,6 @@
 from distutils.core import setup
-from finder_colors import __version__
+
+VERSION = '0.9.4'
 
 setup(
     name = 'finder_colors',
