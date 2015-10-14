@@ -67,6 +67,7 @@ BLANK = 32*chr(0)
 
 def get(filename):
     ''' Get OSX Finder Color (extended attribute) of path (file or folder) '''
+    from xattr import xattr
 
     try:
         attrs = xattr(filename)
@@ -84,6 +85,7 @@ def get(filename):
 
 def set(filename, color): # pylint: disable=W0622
     ''' Set OSX Finder Color (extended attribute) of path (file or folder) '''
+    from xattr import xattr
 
     attrs = xattr(filename)
     if _FINDER_INFO_TAG in attrs:
@@ -107,8 +109,6 @@ def set(filename, color): # pylint: disable=W0622
 # If this is used as a stand-alone script:
 
 if __name__ == '__main__':
-    from xattr import xattr
-
     def display(pathname):
         ''' display filename\tcolor '''
         print(pathname, get(pathname), sep='\t')
