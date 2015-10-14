@@ -55,8 +55,6 @@ from __future__ import print_function
 from xattr import xattr
 from sys import argv, stderr
 
-__version__ = '0.9.3'
-
 _FINDER_INFO_TAG = u'com.apple.FinderInfo'
 
 COLORS = {'none': 0, 'gray': 2, 'green': 4, 'purple': 6, 
