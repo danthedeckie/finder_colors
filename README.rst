@@ -2,6 +2,10 @@
 finder_colors.py
 =================
 
+*NOTE:* **This is Archived - you're welcome to use the code to do whatever else you need in the future.**
+
+------
+
 Set or inspect the colors that Apple OSX Finder assigns to files or folders.
 
 Usable as a standalone script, or it can be imported as a python module.
